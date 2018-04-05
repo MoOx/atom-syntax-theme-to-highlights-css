@@ -1,0 +1,44 @@
+{
+  "name": "atom-syntax-theme-to-highlights-css",
+  "version": "1.0.0",
+  "repository":
+    "https://github.com/MoOx/atom-syntax-theme-to-highlights-css.git",
+  "homepage": "https://github.com/MoOx/atom-syntax-theme-to-highlights-css",
+  "license": "MIT",
+  "authors": ["Maxime Thirouin (MoOx)"],
+  "keywords": [
+    "code",
+    "highlights",
+    "highlight",
+    "atom",
+    "theme",
+    "syntax",
+    "css"
+  ],
+  "description":
+    "This CLI tool allows you to transform an Atom theme to CSS file ready to be used by code highlighted by atom/highlights.",
+  "main": "index.js",
+  "bin": {
+    "atom-syntax-theme-to-highlights-css": "bin.js",
+    "atomst2hlcss": "bin.js"
+  },
+  "files": ["index.js", "bin.js"],
+  "dependencies": {
+    "clipboardy": "^1.2.3",
+    "less": "^3.0.1",
+    "meow": "^4.0.0",
+    "shelljs": "^0.8.1",
+    "tmp": "^0.0.33",
+    "trash": "^4.3.0"
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "jest": "^21.0.0",
+    "prettier": "^1.11.1",
+    "pretty-quick": "^1.4.1"
+  },
+  "scripts": {
+    "precommit": "pretty-quick --staged",
+    "test": "jest ."
+  }
+}

@@ -1,0 +1,10 @@
+*.log
+
+# macOS crap
+.DS_Store
+
+# Node.js / npm
+node_modules
+
+# yarn.lock
+package-lock.json
