@@ -2,43 +2,47 @@ const tmp = require("tmp");
 const clipboardy = require("clipboardy");
 const trash = require("trash");
 const shell = require("shelljs");
+const less = require("less");
 
 const clipboardSuccess = "✅ CSS output copied to your clipboard!";
 
 const opts = { silent: true };
-const toCSS = (repository, { clipboard } = {}) => {
+const toCSS = (repository, { clipboard } = {}, done = () => {}) => {
   const cloneDir = tmp.dirSync();
   const clone = cloneDir.name;
   if (shell.exec(`git clone "${repository}" "${clone}"`, opts).code !== 0) {
-    shell.echo("Error: Git clone failed");
+    console.error("Error: Git clone failed");
     shell.exit(1);
   }
   if (shell.exec(`npm install --prefix ${clone}`, opts).code !== 0) {
-    shell.echo("Error: installing Atom theme dependencies failed");
+    console.error("Error: installing Atom theme dependencies failed");
     shell.exit(2);
   }
-  if (
-    shell.exec(
-      `lessc --include-path="${clone}/styles" "${clone}/index.less" "${clone}/output.css"`,
-      opts
-    ).code !== 0
-  ) {
-    shell.echo("Error: Compiling Atom theme failed");
-    shell.exit(3);
-  }
 
-  let css = shell.cat(`${clone}/output.css`);
+  less.render(
+    shell.cat(`${clone}/index.less`),
+    { paths: [clone, `${clone}/styles`] },
+    (err, result) => {
+      if (err) {
+        console.error("Error: Compiling Atom theme failed: ");
+        console.error(err.message);
+        trash(clone);
+        shell.exit(3);
+      }
 
-  css = css.replace(/atom-text-editor/g, ".editor");
+      const css = result.css.replace(/atom-text-editor/g, ".editor");
 
-  if (clipboard) {
-    clipboardy.writeSync(css);
-    console.log(clipboardSuccess);
-  } else {
-    console.log(css);
-  }
+      if (clipboard) {
+        clipboardy.writeSync(css);
+        console.log(clipboardSuccess);
+      } else {
+        console.log(css);
+      }
 
-  trash(clone);
+      trash(clone);
+      done();
+    }
+  );
 };
 
 toCSS.clipboardSuccess = clipboardSuccess;
