@@ -12,6 +12,8 @@ Atom themes are [less](http://lesscss.org) files so a compilation is required wh
 
 This simple command clone, compile and adjust CSS for you.
 
+![Preview](preview.gif)
+
 ## Install
 
 ⚠️ No need to install this package globally as you will probably not use it often.
